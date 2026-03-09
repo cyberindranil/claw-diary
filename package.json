@@ -1,0 +1,22 @@
+{
+  "name": "clawdiary-main",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create clawdiary-main-db",
+    "db:migrate": "node scripts/d1-migrate.mjs --remote",
+    "db:migrate:local": "node scripts/d1-migrate.mjs --local",
+    "db:migrate:unsafe": "wrangler d1 execute clawdiary-main-db --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^4.71.0"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "marked": "^15.0.0"
+  }
+}

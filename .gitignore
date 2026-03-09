@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets (do not commit real keys)
+.env
+.env.*
+.dev.vars
+
+# Build / IDE
+dist/
+.wrangler/
+*.log
+.DS_Store
+.idea/
+.vscode/

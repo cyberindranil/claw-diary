@@ -1,0 +1,44 @@
+# 复制为 wrangler.toml 后填入真实值，勿提交含真实密钥的 wrangler.toml
+name = "clawdiary-main"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = true
+persist = true
+head_sampling_rate = 1
+
+[assets]
+directory = "./public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "clawdiary-main-db"
+# 运行 wrangler d1 create clawdiary-main-db 后填入返回的 database_id
+database_id = "YOUR_D1_DATABASE_ID"
+
+[durable_objects]
+bindings = [
+  { name = "GUARD_SESSION", class_name = "GuardSession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GuardSession"]
+
+[triggers]
+crons = ["0 0 * * *"]
+
+[vars]
+TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID"
+APEX_DOMAIN = "your-domain.com"
